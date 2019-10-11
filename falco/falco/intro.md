@@ -1,4 +1,4 @@
-Falco is an open source, behavioral monitoring software designed to detect anomalous activity. Falco works as a intrusion detection system on any Linux host, although it is particularly useful when using Docker since it supports container-specific context like **container.id**, **container.image** or **namespaces** for its rules.
+Falco is an open source, behavioral monitoring software designed to detect anomalous activity. Falco works as a intrusion detection system on any Linux host, although it is particularly useful when using containers since it supports container-specific context like **container.id**, **container.image** or **namespaces** for its rules.
 
 If you have not done it yet, it's a good idea to complete the [Sysdig: container troubleshooting and visibility](https://katacoda.com/sysdig/scenarios/sysdig-container-visibility) scenario before this one.
 

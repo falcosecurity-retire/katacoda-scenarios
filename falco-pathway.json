@@ -1,0 +1,21 @@
+{
+    "title": "Falco",
+    "description": "Learn the basics of Falco",
+    "courses": [
+        {
+            "course_id": "falco",
+            "title": "Container runtime security with Falco",
+            "description": "Learn how to use Falco to detect anomalous behaviour and create your own container security policy"
+        },
+        {
+            "course_id": "forensics-k8s",
+            "title": "Practical example of Kubernetes runtime security with Falco",
+            "description": "This scenario teaches you how to use Falco for container forensics on a Kubernetes cluster"
+        },
+        {
+            "course_id": "falco-response-engine",
+            "title": "Blocking security threats with Falco Response Engine",
+            "description": "This scenario teaches you how to use Falco Response Engine on a Kubernetes cluster"
+        }
+    ]
+}
