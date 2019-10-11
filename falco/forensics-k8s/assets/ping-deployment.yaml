@@ -1,0 +1,34 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: ping
+  labels:
+    name: ping-deployment
+    app: demo
+spec:
+  replicas: 1
+  # selector identifies the set of Pods that this
+  # replication controller is responsible for managing
+  selector:
+    matchLabels:
+     name: ping
+     role: frontend
+     app: demo
+  template:
+    spec:
+      containers:
+        - name: phpping
+          image: bencer/workshop-forensics-1-phpping
+          env:
+          - name: DB_HOST
+            value: mysql.ping.svc.cluster.local
+          ports:
+          - containerPort: 80
+            name: phpping
+    metadata:
+      labels:
+        # Important: these labels need to match the selector above
+        # The api server enforces this constraint.
+        name: ping
+        role: frontend
+        app: demo
