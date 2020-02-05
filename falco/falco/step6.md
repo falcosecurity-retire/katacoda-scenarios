@@ -2,8 +2,8 @@ Falco has a synthetic event generator that shows off all the capabilities of the
 
 Let's pull and launch the event generator:
 
-`docker pull sysdig/falco-event-generator
-docker run -d --name falco-event-generator sysdig/falco-event-generator`{{execute}}
+`docker pull falcosecurity/falco-event-generator
+docker run -d --name falco-event-generator falcosecurity/falco-event-generator`{{execute}}
 
 If we look at the log with `tail -f /var/log/falco_events.log`{{execute}} you'll see lots of suspicious activity detected, as that container simulates all sorts of typicall container break-in and break-out attempts:
 
