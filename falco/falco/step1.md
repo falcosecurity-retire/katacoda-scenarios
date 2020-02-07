@@ -13,7 +13,7 @@ As you can guess:
 
 Then, we can pull and launch the Falco container, mounting the configuration files we defined previously:
 
-`docker pull sysdig/falco
+`docker pull falcosecurity/falco
 docker run -d --name falco --privileged \
   -v /var/run/docker.sock:/host/var/run/docker.sock \
   -v /dev:/host/dev \
@@ -24,6 +24,6 @@ docker run -d --name falco --privileged \
   -v /etc/falco/falco.yaml:/etc/falco/falco.yaml \
   -v /etc/falco/falco_rules.yaml:/etc/falco/falco_rules.yaml \
   -v /var/log/falco_events.log:/var/log/falco_events.log \
-  sysdig/falco`{{execute}}
+  falcosecurity/falco`{{execute}}
 
 **Note: if you accidentally terminate the container or want to reload the configuration files, you can always `docker restart falco`{{execute}} from the host.**
