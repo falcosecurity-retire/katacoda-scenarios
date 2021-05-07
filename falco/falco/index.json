@@ -7,9 +7,10 @@
     "details": {
         "assets": {
             "host01": [
-                { "file": "falco.yaml", "target": "/root" },
-                { "file": "falco_rules.yaml", "target": "/root" },
-                { "file": "falco_rules_3.yaml", "target": "/root" }
+                { 
+                    "file": "*.yaml", 
+                    "target": "~/" 
+                }
             ]
         },
         "intro": {
