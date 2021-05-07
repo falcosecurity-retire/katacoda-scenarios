@@ -1,0 +1,38 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: mysql
+  labels:
+    name: mysql-deployment
+    app: demo
+spec:
+  replicas: 1
+  # selector identifies the set of Pods that this
+  # replication controller is responsible for managing
+  selector:
+    matchLabels:
+      name: mysql
+      role: mysqldb
+      app: demo
+  template:
+    spec:
+      containers:
+        - name: mysql
+          image: bencer/workshop-forensics-1-mysql
+          ports:
+            - containerPort: 3306
+              name: mysql
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: foobar
+            - name: MYSQL_DATABASE
+              value: employees
+            - name: SYSDIG_AGENT_CONF
+              value: "app_checks: [{name: mysql, check_module: mysql, pattern: {comm: mysqld}, conf: { server: 127.0.0.1, user: root, pass: foobar }}]"
+    metadata:
+      labels:
+        # Important: these labels need to match the selector above
+        # The api server enforces this constraint.
+        name: mysql
+        role: mysqldb
+        app: demo
