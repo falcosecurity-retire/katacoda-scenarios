@@ -1,33 +1,64 @@
-We will create the same three pods (client, mysql, ping) as in our previous scenario.  As you might remember:
+# Test our function
 
-- The `mysql` pod hosts a database of users and passwords.
-- The `ping` pod hosts a form written in PHP, which allows authenticated users to ping a machine.
-- We will use the `client` pod to send HTTP requests to `ping`'s web server.
+We start by creating a dumb pod:
 
-![Topology](/sysdig/courses/falco/forensics-k8s/assets/01b_topology.png)
+`kubectl run alpine -n default --image=alpine --restart='Never' -- sh -c "sleep 600"`{{execute}}
 
-`cd
-kubectl create namespace ping
-kubectl create -f mysql-deployment.yaml --namespace=ping
-kubectl create -f mysql-service.yaml --namespace=ping
-kubectl create -f ping-deployment.yaml --namespace=ping
-kubectl create -f ping-service.yaml --namespace=ping
-kubectl create -f client-deployment.yaml --namespace=ping`{{execute}}
+We check that it is running with:
 
-As usual, we make sure the pods are ready (it may take one or two minutes):
+`kubectl get pods -n default`{{execute}}
 
-`kubectl get pods -n ping`{{execute}}
+```
+NAME     READY   STATUS    RESTARTS   AGE
+alpine   1/1     Running   0          9s
+```
 
-If we open a shell in a container,
+Let's run a shell command inside and see what happens:
 
-`kubectl -n ping -it exec client /bin/bash
-ls
-exit`{{execute}}
+`kubectl exec -i --tty alpine -n default -- sh -c "uptime"`{{execute}}
 
-the playbook created in the previous step will delete that Pod.  We can check it running
+```
+23:44:25 up 1 day, 19:11,  load average: 0.87, 0.77, 0.77
+```
 
-`kubectl -n ping get pods`{{execute}}
+As expected we got the result of our command, but, if get the status of the pod now:
 
-In a production environment we should probably be using deployments or ReplicaSets, so that a new Pod is created.  Here we can do it manually:
+`kubectl get pods -n default`{{execute}}
 
-`kubectl create -f ~/client-deployment.yaml --namespace=ping`{{execute}}
+```
+NAME     READY   STATUS        RESTARTS   AGE
+alpine   1/1     Terminating   0          103s
+```
+
+💥 It has been terminated 💥
+
+We can now check the logs of components.
+
+For Falco:
+
+`kubectl logs daemonset/falco -n falco`{{execute}}
+
+```
+{"output":"23:39:44.834631763: Notice A shell was spawned in a container with an attached terminal (user=root user_loginuid=-1 k8s.ns=default k8s.pod=alpine container=5892b41bcf46 shell=sh parent=<NA> cmdline=sh terminal=34817 container_id=5892b41bcf46 image=<NA>) k8s.ns=default k8s.pod=alpine container=5892b41bcf46","priority":"Notice","rule":"Terminal shell in container","time":"2021-01-14T23:39:44.834631763Z", "output_fields": {"container.id":"5892b41bcf46","container.image.repository":null,"evt.time":1610667584834631763,"k8s.ns.name":"default","k8s.pod.name":"alpine","proc.cmdline":"sh","proc.name":"sh","proc.pname":null,"proc.tty":34817,"user.loginuid":-1,"user.name":"root"}}
+```
+
+For Falcosidekick:
+
+`kubectl logs deployment/falcosidekick -n falco`{{execute}}
+
+```
+2021/01/14 23:39:45 [INFO]  : Kubeless - Post OK (200)
+2021/01/14 23:39:45 [INFO]  : Kubeless - Function Response : 
+2021/01/14 23:39:45 [INFO]  : Kubeless - Call Function "delete-pod" OK
+```
+
+(Notice, the function returns nothing, this is why the message log is empty)
+
+For delete-pod function:
+
+`kubectl logs deployment/delete-pod -n kubeless`{{execute}}
+
+```
+10.42.0.31 - - [14/Jan/2021:23:39:45 +0000] "POST / HTTP/1.1" 200 0 "" "Falcosidekick" 0/965744
+Deleting pod "alpine" in namespace "default"
+```
