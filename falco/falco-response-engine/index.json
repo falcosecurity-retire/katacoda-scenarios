@@ -1,7 +1,7 @@
 {
-    "pathwayTitle": "Falco",
+    "pathwayTitle": "Sysdig Falco",
     "title": "Blocking security threats with Falco Response Engine",
-    "description": "This scenario teaches you how to use Falco Response Engine on a Kubernetes cluster",
+    "description": "This scenario teaches you how to use Sysdig Falco Response Engine on a Kubernetes cluster",
     "difficulty": "medium",
     "time": "20 minutes",
     "details": {
@@ -56,6 +56,6 @@
         "uimessage1": "\u001b[32mYour Interactive Bash Terminal. A safe place to learn and execute commands.\u001b[m\r\n"
     },
     "backend": {
-        "imageid": "kubernetes-cluster-running"
+        "imageid": "kubernetes-cluster-running:1.18"
     }
 }

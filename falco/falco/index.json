@@ -53,6 +53,6 @@
         "uimessage1": "\u001b[32mYour interactive Bash Terminal.\u001b[m\r\n"
     },
     "backend": {
-        "imageid": "sysdig"
+        "imageid": "ubuntu"
     }
 }
