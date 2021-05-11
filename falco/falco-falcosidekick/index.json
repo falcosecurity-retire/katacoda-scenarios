@@ -36,15 +36,15 @@
                 "text": "step3.md"
             },
             {
-                "title": "Deploying CNCF flavor: NATS",
+                "title": "Installing Falco",
                 "text": "step4.md"
             },
             {
-                "title": "Deploying Falco with NATS output",
+                "title": "Installing Falcosidekick",
                 "text": "step5.md"
             },
             {
-                "title": "Active Security and playbooks",
+                "title": "Installing the Kubeless function",
                 "text": "step6.md"
             },
             {

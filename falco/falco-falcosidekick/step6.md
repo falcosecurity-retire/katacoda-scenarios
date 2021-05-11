@@ -1,33 +1,144 @@
-You can subscribe a Kubeless function (_playbook_) to a NATS queue, so the function will be invoked for every message in the queue.
+We'll not explain how to write or how work Kubeless functions, please read the official [docs](https://kubeless.io/docs/) for more information.
 
-Delete Offending Pod
---------------------
 
-Our first playbook will respond to an incident directly killing the Pod that triggered the security alert. This is done connecting to the Kubernetes API and deleting that Pod.
+# Install our Kubeless function
 
-`cd ~/kubernetes-response-engine/playbooks
-./deploy_playbook -p delete -s "falco.notice.terminal_shell_in_container"`{{execute}}
+Our really basic function will receive events from Falco thanks to Falcosidekick, check if the triggered rule is Terminal Shell in container (See [rule](https://github.com/falcosecurity/falco/blob/0d7068b048772b1e2d3ca5c86c30b3040eac57df/rules/falco_rules.yaml#L2063)), extract the namespace and pod name from fields of events and delete the according pod:
 
-This deploys the Kubeless function that subscribes to the NATS "falco.notice.terminal_shell_in_container" topic.
+```
+from kubernetes import client,config
 
-To see whether the function is ready we execute
-`kubeless function ls falco-delete | head`{{execute}}
+config.load_incluster_config()
 
-Taint a Node and Stop Scheduling
---------------------------------
+def delete_pod(event, context):
+    rule = event['data']['rule'] or None
+    output_fields = event['data']['output_fields'] or None
 
-A very interesting response would be to put aside the node where the offending container was running, so nothing else is scheduled there. You can assign flags ([taints and tolerations](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/)) to the Kubernetes node where the alert originated to achieve different effects.
+    if rule and rule == "Terminal shell in container" and output_fields:
+        if output_fields['k8s.ns.name'] and output_fields['k8s.pod.name']:
+            pod = output_fields['k8s.pod.name']
+            namespace = output_fields['k8s.ns.name']
+            print (f"Deleting pod \"{pod}\" in namespace \"{namespace}\"")
+            client.CoreV1Api().delete_namespaced_pod(name=pod, namespace=namespace, body=client.V1DeleteOptions())
+```
 
-`./deploy_playbook -p taint -s "falco.notice.contact_k8s_api_server_from_container"`{{execute}}
+Basically, the process is:
 
-We can pass several paraments with the option `-e`:
+```
+           +----------+                 +---------------+                    +----------+
+           |  Falco   +-----------------> Falcosidekick +--------------------> Kubeless |
+           +----^-----+   sends event   +---------------+      triggers      +-----+----+
+                |                                                                  |
+detects a shell |                                                                  |
+                |                                                                  |
+           +----+-------+                                   deletes                |
+           | Pwned Pod  <----------------------------------------------------------+
+           +------------+
+```
 
-- `TAINT_KEY`: This is the taint key. Default value: `falco/alert`
-- `TAINT_VALUE`: This is the taint value. Default value: `true`
-- `TAINT_EFFECT`: This is the taint effect. Default value: `NoSchedule`
+Before deploying our function, we need to create a ServiceAccount for it, as it will need the right to delete a pod in any namespace:
 
-In the example, as we are executing it without parameters, it will use the default taint `falco/alert=true:NoSchedule` so no news Pods will be scheduled in this node unless they can tolerate that specific taint. You can use a more aggressive approach and set `-e TAINT_EFFECT=NoExecute`, which will drain the affected node.
+`cat <<EOF | kubectl apply -n kubeless -f -
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: falco-pod-delete
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: falco-pod-delete-cluster-role
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "delete"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: falco-pod-delete-cluster-role-binding
+roleRef:
+  kind: ClusterRole
+  name: falco-pod-delete-cluster-role
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+  - kind: ServiceAccount
+    name: falco-pod-delete
+    namespace: kubeless
+EOF`{{execute}}
 
-After raising the event, we would see one of our nodes got tainted:
+And this is the output we get after we create it:
 
-`kubectl describe node | grep Taint`{{execute}}
+```
+namespace: kubelessetetion.k8s.io
+serviceaccount/falco-pod-delete created
+clusterrole.rbac.authorization.k8s.io/falco-pod-delete-cluster-role created
+clusterrolebinding.rbac.authorization.k8s.io/falco-pod-delete-cluster-role-binding created
+```
+
+Only remains the installation of our function itself:
+
+`cat <<EOF | kubectl apply -n kubeless -f -
+apiVersion: kubeless.io/v1beta1
+kind: Function
+metadata:
+  finalizers:
+    - kubeless.io/function
+  generation: 1
+  labels:
+    created-by: kubeless
+    function: delete-pod
+  name: delete-pod
+spec:
+  checksum: sha256:a68bf570ea30e578e392eab18ca70dbece27bce850a8dbef2586eff55c5c7aa0
+  deps: |
+    kubernetes>=12.0.1
+  function-content-type: text
+  function: |-
+    from kubernetes import client,config
+
+    config.load_incluster_config()
+
+    def delete_pod(event, context):
+        rule = event['data']['rule'] or None
+        output_fields = event['data']['output_fields'] or None
+
+        if rule and rule == "Terminal shell in container" and output_fields:
+            if output_fields['k8s.ns.name'] and output_fields['k8s.pod.name']:
+                pod = output_fields['k8s.pod.name']
+                namespace = output_fields['k8s.ns.name']
+                print (f"Deleting pod \"{pod}\" in namespace \"{namespace}\"")
+                client.CoreV1Api().delete_namespaced_pod(name=pod, namespace=namespace, body=client.V1DeleteOptions())
+  handler: delete-pod.delete_pod
+  runtime: python3.7
+  deployment:
+    spec:
+      template:
+        spec:
+          serviceAccountName: falco-pod-delete
+EOF`{{execute}}
+
+This is what we get after a suscessfull installation:
+
+```
+function.kubeless.io/delete-pod created
+```
+
+Here we are, after a few moments, we have a Kubeless function running in namespace kubeless and that can be triggered by its service delete-pod on port 8080:
+
+`kubectl get pods -n kubeless`{{execute}}
+
+```
+NAME                                          READY   STATUS    RESTARTS   AGE
+kubeless-controller-manager-99459cb67-tb99d   3/3     Running   3          3d14h
+delete-pod-d6f98f6dd-cw228                    1/1     Running   0          2m52s
+```
+
+And executing `kubectl get svc -n kubeless`{{execute}}:
+
+Will return:
+
+```
+NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+delete-pod   ClusterIP   10.43.211.201   <none>        8080/TCP         4m38s
+```

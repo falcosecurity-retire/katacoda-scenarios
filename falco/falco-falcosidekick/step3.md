@@ -1,29 +1,18 @@
 _[Kubeless](https://kubeless.io/)_ is a Kubernetes-native Serverless Framework. You can use Kubeless to deploy your functions without worrying about the underlying infrastructure, and trigger them in response to events.
 
-Deploy Kubeless in Kubernetes
------------------------------
+# Installing Kubeless
 
-Next let's create a `kubeless` namespace and deploy the latest release of kubeless.
+Follow the official [quick start](https://kubeless.io/docs/quick-start/) page:
 
-`kubectl create ns kubeless
-export RELEASE=$(curl -s https://api.github.com/repos/kubeless/kubeless/releases/latest | grep tag_name | cut -d '"' -f 4)
+`export RELEASE=$(curl -s https://api.github.com/repos/kubeless/kubeless/releases/latest | grep tag_name | cut -d '"' -f 4)
+kubectl create ns kubeless
 kubectl create -f https://github.com/kubeless/kubeless/releases/download/$RELEASE/kubeless-$RELEASE.yaml`{{execute}}
 
-You can see:
+After a few seconds, we can check that the controller is up and running:
 
-- the pods created:  
-  `kubectl get pods -n kubeless`{{execute}}
-- the deployment:  
-  `kubectl get deployment -n kubeless`{{execute}}
-- and the `functions` [Custom Resource Definition](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/):  
-  `kubectl get customresourcedefinition`{{execute}}
+`kubectl get pods -n kubeless`{{execute}}
 
-Local kubeless command line
----------------------------
-
-Finally, install the Kubeless CLI:
-
-`export OS=$(uname -s| tr '[:upper:]' '[:lower:]')
-curl -OL https://github.com/kubeless/kubeless/releases/download/$RELEASE/kubeless_$OS-amd64.zip
-unzip kubeless_$OS-amd64.zip
-sudo mv bundles/kubeless_$OS-amd64/kubeless /usr/local/bin/`{{execute}}
+```
+NAME                                          READY   STATUS    RESTARTS   AGE
+kubeless-controller-manager-99459cb67-tb99d   3/3     Running   3          2m34s
+```
