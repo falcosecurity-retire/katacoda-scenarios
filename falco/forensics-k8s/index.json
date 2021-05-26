@@ -8,14 +8,12 @@
     "details": {
         "assets": {
             "host01": [
-                { "file": "*.yaml", "target": "~/" },
-                { "file": "wait.sh", "target": "/usr/local/bin/", "chmod": "+x" }
+                { "file": "*.yaml", "target": "~/" }
             ]
         },
         "intro": {
             "text": "intro.md",
-            "courseData": "courseBase.sh",
-            "code": "foreground.sh"
+            "courseData": "courseBase.sh"
         },
         "steps": [
             {

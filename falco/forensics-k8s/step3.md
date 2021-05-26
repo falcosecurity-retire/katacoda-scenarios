@@ -7,6 +7,8 @@ The default rules file contains detection patterns for many common threats.  Thi
 
 This makes easy to customize falco's behavior, and still allows to update the rules as part of software upgrades.
 
+## Falco rules: elements
+
 A falco rules file is a YAML file containing three kinds of elements: rules, macros, and lists.
 
 - **Rules** consist of a condition under which an alert should be generated and a output string to send with the alert.

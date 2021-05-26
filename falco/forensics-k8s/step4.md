@@ -1,8 +1,8 @@
-We will create three pods (client, mysql, ping) for our workshop:
+You will create three pods (client, mysql, ping) for our workshop:
 
 - The `mysql` pod hosts a database of users and passwords.
 - The `ping` pod hosts a form written in PHP, which allows authenticated users to ping a machine.
-- We will use the `client` pod to send HTTP requests to `ping`'s web server.
+- You will use the `client` pod to send HTTP requests to `ping`'s web server.
 
 ![Topology](assets/01b_topology.png)
 
@@ -30,7 +30,7 @@ If you enter an incorrect password, access will be denied.
 
 ![Wrong password](assets/02_wrong_password.png)
 
-Now we will do the same, but from the `client` pod.  Let's send a request to the Ping application to ping localhost:
+Now you will do the same, but from the `client` pod.  Let's send a request to the Ping application to ping localhost:
 
 `kubectl exec client -n ping -- curl -F "s=OK" -F "user=bob" -F "passwd=foobar" -F "ipaddr=localhost" -X POST http://ping/ping.php`{{execute}}
 

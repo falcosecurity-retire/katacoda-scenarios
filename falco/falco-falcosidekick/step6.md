@@ -24,21 +24,12 @@ def delete_pod(event, context):
 
 Basically, the process is:
 
-```
-           +----------+                 +---------------+                    +----------+
-           |  Falco   +-----------------> Falcosidekick +--------------------> Kubeless |
-           +----^-----+   sends event   +---------------+      triggers      +-----+----+
-                |                                                                  |
-detects a shell |                                                                  |
-                |                                                                  |
-           +----+-------+                                   deletes                |
-           | Pwned Pod  <----------------------------------------------------------+
-           +------------+
-```
+![diagram](/sysdig/courses/falco/falco-falcosidekick/assets/diagram.png)
 
 Before deploying our function, we need to create a ServiceAccount for it, as it will need the right to delete a pod in any namespace:
 
-`cat <<EOF | kubectl apply -n kubeless -f -
+```
+cat <<EOF | kubectl apply -n kubeless -f -
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -65,7 +56,8 @@ subjects:
   - kind: ServiceAccount
     name: falco-pod-delete
     namespace: kubeless
-EOF`{{execute}}
+EOF
+```{{execute}}
 
 And this is the output we get after we create it:
 
@@ -78,7 +70,8 @@ clusterrolebinding.rbac.authorization.k8s.io/falco-pod-delete-cluster-role-bindi
 
 Only remains the installation of our function itself:
 
-`cat <<EOF | kubectl apply -n kubeless -f -
+```
+cat <<EOF | kubectl apply -n kubeless -f -
 apiVersion: kubeless.io/v1beta1
 kind: Function
 metadata:
@@ -116,7 +109,8 @@ spec:
       template:
         spec:
           serviceAccountName: falco-pod-delete
-EOF`{{execute}}
+EOF
+```{{execute}}
 
 This is what we get after a suscessfull installation:
 

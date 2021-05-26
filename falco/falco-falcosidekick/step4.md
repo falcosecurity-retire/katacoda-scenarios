@@ -34,7 +34,11 @@ And executing `kubectl get pods -n falco`{{execute}} you can see your new Falco 
 NAME                           READY   STATUS        RESTARTS   AGE
 falco-ctmzg                    1/1     Running       0          111s
 falco-sfnn8                    1/1     Running       0          111s
-falco-rrg28                    1/1     Running       0          111s
 ```
 
-The arguments --set falco.jsonOutput=true --set falco.httpOutput.enabled=true --set falco.httpOutput.url=http://falcosidekick:2801 are there configuring the format of events and the URL where Falco will send them. As Falco and Falcosidekick will be in the same namespace, we can directly use the name of the service (falcosidekick).
+The arguments
+
+```
+--set falco.jsonOutput=true --set falco.httpOutput.enabled=true --set falco.httpOutput.url=http://falcosidekick:2801 
+```
+are there configuring the format of events and the URL where Falco will send them. As Falco and Falcosidekick will be in the same namespace, we can directly use the name of the service (falcosidekick).
