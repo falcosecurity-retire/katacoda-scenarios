@@ -3,24 +3,20 @@
     "title": "Falcosidekick: blocking security threats with Falco Response Engine",
     "description": "Learn how to define a Kubernetes Response Engine with Falcosidekick and Kubeless",
     "difficulty": "medium",
-    "time": "20 minutes",
+    "time": "15 minutes",
     "details": {
         "assets": {
             "host01": [
                 { 
                     "file": "*.yaml", 
                     "target": "~/" 
-                },
-                { 
-                    "file": "wait.sh", 
-                    "target": "/usr/local/bin/", "chmod": "+x" 
                 }
             ]
         },
         "intro": {
             "text": "intro.md",
             "courseData": "courseBase.sh",
-            "code": "foreground.sh"
+            "credits": "Based on [Falco blog post](https://falco.org/blog/falcosidekick-reponse-engine-part-1-kubeless/)"
         },
         "steps": [
             {
@@ -61,6 +57,6 @@
         "uimessage1": "\u001b[32mYour Interactive Bash Terminal. A safe place to learn and execute commands.\u001b[m\r\n"
     },
     "backend": {
-        "imageid": "kubernetes-cluster-running"
+        "imageid": "kubernetes-cluster-running:1.18"
     }
 }

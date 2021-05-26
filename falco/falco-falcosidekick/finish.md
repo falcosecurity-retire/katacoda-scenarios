@@ -6,6 +6,5 @@ Bonus: You're running Falcosidekick outside Kubernetes but still want to use the
 
 Eager to learn more? These are some recommended further steps:
 
-- [Runtime container security – How to implement open source container security (part 1)](https://sysdig.com/blog/oss-container-security-runtime/)
 - [Falco documentation](https://github.com/draios/falco/wiki)
-- [Sysdig slack](https://slack.sysdig.com/), join channel #falco
+- [Runtime container security – How to implement open source container security (part 1)](https://sysdig.com/blog/oss-container-security-runtime/)

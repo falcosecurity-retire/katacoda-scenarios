@@ -1,4 +1,4 @@
-In the previous scenario, [Practical example of Kubernetes runtime security with Falco](https://katacoda.com/sysdig/scenarios/forensics-k8s), you learned how to investigate what happened with a defunct pod.
+In the previous scenario, [Practical example of Kubernetes runtime security with Falco](https://katacoda.com/falco/courses/falco/forensics-k8s), you learned how to investigate what happened with a defunct pod.
 
 If you have not done it yet, it's a good idea to complete that scenario before going on with this one.
 

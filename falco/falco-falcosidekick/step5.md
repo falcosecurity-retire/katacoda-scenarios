@@ -32,6 +32,9 @@ Kubeless is displayed as enabled output, everything is good 👍.
 
 A brief explanation of parameters:
 
+```
 config.kubeless.namespace: is the namespace where our Kubeless will run
 config.kubeless.function: is the name of our Kubeless function
+```
+
 That's it, we really tried to get a nice UX 😉.
