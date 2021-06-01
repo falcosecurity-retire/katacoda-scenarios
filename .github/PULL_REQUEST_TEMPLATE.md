@@ -28,11 +28,11 @@
 
 > Uncomment one (or more) `/area <>` lines:
 
-> /area blog
+> /area lab:<lab_name> 
 
-> /area documentation
+> /area text_content
 
-> /area videos
+> /area environment
 
 **What this PR does / why we need it**:
 
