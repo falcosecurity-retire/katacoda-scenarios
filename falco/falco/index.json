@@ -7,10 +7,9 @@
     "details": {
         "assets": {
             "host01": [
-                { 
-                    "file": "*.yaml", 
-                    "target": "~/" 
-                }
+                { "file": "falco.yaml", "target": "/root" },
+                { "file": "falco_rules.yaml", "target": "/root" },
+                { "file": "falco_rules_3.yaml", "target": "/root" }
             ]
         },
         "intro": {
@@ -53,6 +52,6 @@
         "uimessage1": "\u001b[32mYour interactive Bash Terminal.\u001b[m\r\n"
     },
     "backend": {
-        "imageid": "ubuntu"
+        "imageid": "sysdig"
     }
 }

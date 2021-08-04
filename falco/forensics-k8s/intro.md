@@ -4,7 +4,7 @@ It can detect abnormal application behavior, and alert via Slack, Fluentd, NATS,
 
 It can also protect your platform by taking action through serverless (FaaS) frameworks, or other automation.
 
-If you have not done it yet, it's a good idea to complete the [Falco: Container security monitoring](https://katacoda.com/falco/courses/falco/falco) scenario before this one.
+If you have not done it yet, it's a good idea to complete the [Falco: Container security monitoring](https://katacoda.com/sysdig/courses/falco/sysdig-falco) scenario before this one.
 
 In this lab you will learn the basics of Falco and how to use it along with a Kubernetes cluster to detect anomalous behavior.
 

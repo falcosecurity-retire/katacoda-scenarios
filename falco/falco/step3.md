@@ -1,6 +1,6 @@
 Docker best practices recommend running just one process per container. This has a significant security impact because you know exactly which processes you expect to see running.
 
-You know that your _nginx_ containers should only be executing the `nginx` process. Anything else is an indicator of an anomaly.
+You know that your _Nginx_ containers should only be executing the `nginx` process. Anything else is an indicator of an anomaly.
 
 Let's install a new version of the configuration file for this example:
 
@@ -24,9 +24,9 @@ Let's dissect the triggering conditions for this rule:
 - `container.image startswith nginx` (a container property: the image name so you can have an authorized process lists for each one)
 - `not proc.name in (nginx)` (the list of allowed processes names)
 
-To apply the new configuration file you will restart the Falco container: `docker restart falco`{{execute}}.
+To apply the new configuration file we will restart the Falco container: `docker restart falco`{{execute}}.
 
-Now you need to run a new _Nginx_ container:
+Now we need to run a new _Nginx_ container:
 
 `docker run -d -P --name example2 nginx`{{execute}}
 
@@ -34,7 +34,7 @@ And run anything in the `example2` container, `ls` for example:
 
 `docker exec -it example2 ls`{{execute}}
 
-If you look at the log with `tail /var/log/falco_events.log`{{execute}} you will be able to read:
+If we look at the log with `tail /var/log/falco_events.log`{{execute}} you will be able to read:
 
 ```log
 18:38:43.364877988: Warning Unauthorized process (ls ) running in (604aa46610dd)

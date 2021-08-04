@@ -1,4 +1,4 @@
-A Kubernetes cluster has been set up just for you.  
+We have already set up a Kubernetes cluster just for you.  
 On the right you can see the terminal of the `master` node, from which you can interact with the cluster using the `kubectl` tool, which is already configured.
 
 For instance, you can get the details of the cluster executing `kubectl cluster-info`{{execute}}
