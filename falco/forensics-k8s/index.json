@@ -8,12 +8,15 @@
     "details": {
         "assets": {
             "host01": [
-                { "file": "*.yaml", "target": "~/" }
+                { "file": "*.yaml", "target": "~/" },
+                { "file": "wait.sh", "target": "/usr/local/bin/", "chmod": "+x" }
             ]
         },
         "intro": {
             "text": "intro.md",
-            "courseData": "courseBase.sh"
+            "courseData": "courseBase.sh",
+            "code": "foreground.sh",
+            "credits": "Based on Sysdig Blog articles: https://sysdig.com/blog/."
         },
         "steps": [
             {
@@ -58,6 +61,6 @@
         ]
     },
     "backend": {
-        "imageid": "kubernetes-cluster-running:1.18"
+        "imageid": "kubernetes-cluster-running"
     }
 }

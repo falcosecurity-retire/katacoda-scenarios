@@ -17,23 +17,23 @@ This is the rule that watches for sensitive mounts inside containers:
   tags: [container, cis]
 ```
 
-The macro `sensitive_mount` includes the _forbidden_ directories. By default it just watches _/proc_ but in our configuration file it has been modified to include _/mnt_ as well.
+The macro `sensitive_mount` includes the _forbidden_ directories. By default it just watches _/proc_ but in our configuration file we have modified to include _/mnt_ as well.
 
 ```yaml
 - macro: sensitive_mount
   condition: (container.mount.dest[/proc*] != "N/A" or container.mount.dest[/mnt*] != "N/A")
 ```
 
-To apply the new configuration file you will restart the Falco container: `docker restart falco`{{execute}}.
+To apply the new configuration file we will restart the Falco container: `docker restart falco`{{execute}}.
 
 Now, you can spawn a new container and try to mount `/mnt`:
 
 `docker run -d -P --name example4 -v /mnt:/tmp/mnt alpine`{{execute}}
 
-If you look at the log with `tail /var/log/falco_events.log`{{execute}} you will be able to read:
+If we look at the log with `tail /var/log/falco_events.log`{{execute}} you will be able to read:
 
 ```yaml
-13:32:41.070491862: Notice Container with sensitive mount started (user=root command=sh -g daemon off; example4 (id=c46fa3bf0651))
+13:32:41.070491862: Informational Container with sensitive mount started (user=root command=sh -g daemon off; example4 (id=c46fa3bf0651))
 ```
 
 The Falco notification shows that it detected a sensitive mount.

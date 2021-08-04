@@ -318,7 +318,7 @@
 #### Katacoda step 4
 
 - macro: user_data_dir
-  condition: fd.name startswith /userdata or fd.name startswith /var/log/nginx or fd.name startswith /var/run/nginx or fd.name startswith /root or fd.name startswith /var/log/falco
+  condition: evt.arg[1] startswith /userdata or evt.arg[1] startswith /var/log/nginx or evt.arg[1] startswith /var/run/nginx or evt.arg[1] startswith /root
 
 - rule: Write to non user_data dir
   desc: attempt to write to directories that should be immutable
