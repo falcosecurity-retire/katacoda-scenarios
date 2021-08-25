@@ -4,7 +4,7 @@ We will create three pods (client, mysql, ping) for our workshop:
 - The `ping` pod hosts a form written in PHP, which allows authenticated users to ping a machine.
 - We will use the `client` pod to send HTTP requests to `ping`'s web server.
 
-![Topology](/sysdig/courses/falco/forensics-k8s/assets/01b_topology.png)
+![Topology](assets/01b_topology.png)
 
 `kubectl create namespace ping
 kubectl create -f mysql-deployment.yaml --namespace=ping
@@ -24,11 +24,11 @@ Alternatively, you can open this URL in your browser:
 
 You can use the username "bob" and password "foobar" to ping any machine in the Internet.
 
-![Ping](/sysdig/courses/falco/forensics-k8s/assets/01_pingweb.png)
+![Ping](assets/01_pingweb.png)
 
 If you enter an incorrect password, access will be denied.
 
-![Wrong password](/sysdig/courses/falco/forensics-k8s/assets/02_wrong_password.png)
+![Wrong password](assets/02_wrong_password.png)
 
 Now we will do the same, but from the `client` pod.  Let's send a request to the Ping application to ping localhost:
 

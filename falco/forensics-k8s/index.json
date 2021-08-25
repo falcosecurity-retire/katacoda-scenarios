@@ -16,7 +16,7 @@
             "text": "intro.md",
             "courseData": "courseBase.sh",
             "code": "foreground.sh",
-            "credits": "Based on Sysdig Blog articles: https://sysdig.com/blog/."
+            "credits": "Based on Falco Blog articles: https://falco.org/blog/."
         },
         "steps": [
             {
