@@ -116,9 +116,6 @@
     newusers, pwck, pwconv, pwunconv, useradd, userdel, usermod, vigr, vipw, unix_chkpwd
     ]
 
-- list: sys_digcloud_binaries
-  items: [setup-backend, dragent, sdchecks]
-
 - list: docker_binaries
   items: [docker, dockerd, exe, docker-compose, docker-entrypoi]
 
@@ -159,8 +156,7 @@
     apt-listchanges, unattended-upgr
     ]
 
-# The truncated dpkg-preconfigu is intentional, process names are
-# truncated at the sys_dig level.
+# The truncated dpkg-preconfigu is intentional
 - list: package_mgmt_binaries
   items: [rpm_binaries, deb_binaries, update-alternat]
 
@@ -338,14 +334,13 @@
 - macro: write_etc_common
   condition: >
     etc_dir and evt.dir = < and open_write
-    and not proc.name in (passwd_binaries, shadowutils_binaries, sys_digcloud_binaries,
+    and not proc.name in (passwd_binaries, shadowutils_binaries,
                           package_mgmt_binaries, ssl_mgmt_binaries, dhcp_binaries,
                           dev_creation_binaries,
                           ldconfig.real, ldconfig, confd, gpg, insserv,
                           apparmor_parser, update-mime, tzdata.config, tzdata.postinst,
                           systemd-machine, debconf-show, rollerd, bind9.postinst, sv,
                           gen_resolvconf.)
-    and not proc.pname in (sys_digcloud_binaries)
     and not fd.directory in (/etc/cassandra, /etc/ssl/certs/java)
     and not ansible_running_python
     and not python_running_denyhosts
@@ -448,7 +443,7 @@
 #   output: "Loaded .so from unexpected dir (%user.name %proc.name %evt.dir %evt.type %evt.args %fd.name)"
 #   priority: WARNING
 
-# Temporarily disabling this rule as it's tripping over https://github.com/draios/sys_dig/issues/598
+# Temporarily disabling this rule
 # - rule: Syscall returns eaccess
 #   desc: >
 #     any system call that returns EACCESS. This is not always a strong
@@ -465,9 +460,8 @@
     as a part of creating a container) by calling setns.
   condition: >
     evt.type = setns
-    and not proc.name in (docker_binaries, k8s_binaries, lxd_binaries, sys_digcloud_binaries, sys_dig, nsenter)
+    and not proc.name in (docker_binaries, k8s_binaries, lxd_binaries, nsenter)
     and not proc.name startswith "runc:"
-    and not proc.pname in (sys_digcloud_binaries)
     and not java_running_sdjagent
   output: >
     Namespace change (setns) by unexpected program (user=%user.name command=%proc.cmdline
@@ -482,7 +476,7 @@
     configure, awk, falco, fail2ban-server, fleetctl,
     logrotate, ansible, less, adduser, pycompile, py3compile,
     pyclean, py3clean, pip, pip2, ansible-playboo, man-db,
-    init, pluto, mkinitramfs, unattended-upgr, watch, sys_dig,
+    init, pluto, mkinitramfs, unattended-upgr, watch,
     landscape-sysin, nessusd, PM2, syslog-summary, erl_child_setup,
     npm, cloud-init, toybox, ceph
     ]
@@ -509,14 +503,11 @@
   tags: [host, shell]
 
 - macro: trusted_containers
-  condition: (container.image startswith sys_dig/agent or
+  condition: (container.image startswith gcr.io/google_containers/kube-proxy or
               (container.image startswith falcosecurity/falco and
                not container.image startswith falcosecurity/falco-event-generator) or
-              container.image startswith quay.io/sys_dig or
-              container.image startswith sys_dig/sys_dig or
               container.image startswith gcr.io/google_containers/hyperkube or
-              container.image startswith quay.io/coreos/flannel or
-              container.image startswith gcr.io/google_containers/kube-proxy)
+              container.image startswith quay.io/coreos/flannel)
 
 # These containers are ones that are known to spawn lots of
 # shells. Generally, they are for systems where the container is used
