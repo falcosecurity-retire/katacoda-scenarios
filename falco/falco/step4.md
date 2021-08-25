@@ -28,7 +28,7 @@ Let's take a look at the *open_write* macro used above:
 condition: (evt.type=open or evt.type=openat) and evt.is_open_write=true and fd.typechar='f'
 ```
 
-These conditions are based on the Sysdig system call filters- In this case we filter `open` or `openat` system calls, open write mode, and for file descriptors that are files. If you want to learn more about Sysdig filters, take our [Sysdig: container troubleshooting and visibility](https://katacoda.com/sysdig/scenarios/sysdig-container-visibility) course or check out these [Sysdig examples](https://github.com/draios/sysdig/wiki/Sysdig-Examples).
+These conditions are based a [Wireshark based system call filter](https://bit.ly/38aYW5M) - In this case, we filter `open` or `openat` system calls, open write mode, and for file descriptors that are files. If you want to learn more about these filters, check out these [examples](https://bit.ly/2WkUfnp).
 
 To apply the new configuration file we will restart the Falco container:  
 `docker restart falco`{{execute}}.

@@ -3,6 +3,6 @@ You learned how to deploy playbooks that respond automatically to a certain secu
 
 Eager to learn more? These are some recommended further steps:
 
-- [Runtime container security – How to implement open source container security (part 1)](https://sysdig.com/blog/oss-container-security-runtime/)
+- [Runtime container security – How to implement open source container security (part 1)](https://bit.ly/3yfOc0N)
 - [Falco documentation](https://github.com/draios/falco/wiki)
-- [Sysdig slack](https://slack.sysdig.com/), join channel #falco
+- [Falco slack](https://kubernetes.slack.com/archives/CMWH3EH32), join channel #falco

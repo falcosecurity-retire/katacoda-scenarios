@@ -27,7 +27,7 @@ spec:
               value: foobar
             - name: MYSQL_DATABASE
               value: employees
-            - name: SYSDIG_AGENT_CONF
+            - name: lololo
               value: "app_checks: [{name: mysql, check_module: mysql, pattern: {comm: mysqld}, conf: { server: 127.0.0.1, user: root, pass: foobar }}]"
     metadata:
       labels:
