@@ -1,5 +1,6 @@
 {
     "pathwayTitle": "Falco",
+    "private": true,
     "title": "Blocking security threats with Falco Response Engine",
     "description": "This scenario teaches you how to use Falco Response Engine on a Kubernetes cluster",
     "difficulty": "medium",
