@@ -24,7 +24,7 @@ def delete_pod(event, context):
 
 Basically, the process is:
 
-![diagram](/sysdig/courses/falco/falco-falcosidekick/assets/diagram.png)
+![diagram](assets/diagram.png)
 
 Before deploying our function, we need to create a ServiceAccount for it, as it will need the right to delete a pod in any namespace:
 
