@@ -8,7 +8,7 @@ Add the *helm* repo:
 
 `helm repo add falcosecurity https://falcosecurity.github.io/charts`{{execute}}
 
-In a real project, you should get the whole chart with helm pull falcosecurity/falco --untar and then configure the values.yaml. For this tutorial, will try to keep thing as easy as possible and set configs directly by helm install command:
+In a real project, you should get the whole chart with `helm pull falcosecurity/falco --untar` and then configure the `values.yaml`. For this tutorial, will try to keep thing as easy as possible and set configs directly by helm install command:
 
 `helm install falco falcosecurity/falco --set falco.jsonOutput=true --set falco.httpOutput.enabled=true --set falco.httpOutput.url=http://falcosidekick:2801 -n falco`{{execute}}
 

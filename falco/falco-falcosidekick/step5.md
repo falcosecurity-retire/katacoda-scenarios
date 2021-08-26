@@ -1,5 +1,3 @@
-# Installing Falcosidekick
-
 The process is quite the same:
 
 `helm install falcosidekick falcosecurity/falcosidekick --set config.kubeless.namespace=kubeless --set config.kubeless.function=delete-pod -n falco`{{execute}}
@@ -8,20 +6,21 @@ You should get this output:
 
 ```
 NAME: falcosidekick
-LAST DEPLOYED: Thu Jan 14 23:55:12 2021
+LAST DEPLOYED: Thu Aug 26 13:41:16 2021
 NAMESPACE: falco
 STATUS: deployed
 REVISION: 1
 NOTES:
-1. Get the application URL by running these commands:
-  export POD_NAME=$(kubectl get pods --namespace falco -l "app.kubernetes.io/name=falcosidekick,app.kubernetes.io/instance=falcosidekick" -o jsonpath="{.items[0].metadata.name}")
-  kubectl port-forward $POD_NAME 2801:2801
+1. Get the URL for Falcosidekick by running these commands:
+  kubectl port-forward svc/falcosidekick 2801:2801 --namespace falco
   echo "Visit http://127.0.0.1:2801 to use your application"
+2. Try to enable Falcosidekick-UI (WebUI) by adding this argument to your command:
+  --set webui.enabled=true
 ```
 
 We check the logs:
 
-`kubectl logs deployment/falcosidekick -n falco`{{execute}}
+`kubectl logs deployment/falcosidekick -n falco | head`{{execute}}
 
 ```
 2021/01/14 22:55:31 [INFO]  : Enabled Outputs : Kubeless 
