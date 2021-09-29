@@ -8,5 +8,5 @@ spec:
     - sh
     - -c
     - while true; do curl www.google.com; sleep 30; done
-    image: tutum/curl
+    image: curlimages/curl
     name: client
