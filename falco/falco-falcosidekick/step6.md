@@ -1,11 +1,10 @@
-We'll not explain how to write or how work Kubeless functions, please read the official [docs](https://kubeless.io/docs/) for more information.
-
-
 # Install our Kubeless function
 
-Our really basic function will receive events from Falco thanks to Falcosidekick, check if the triggered rule is `Terminal Shell in container` (See [rule](https://github.com/falcosecurity/falco/blob/0d7068b048772b1e2d3ca5c86c30b3040eac57df/rules/falco_rules.yaml#L2063)), extract the namespace and pod name from fields of events and delete the according pod:
+Refer to the official [guide](https://kubeless.io/docs/) on how to write Kubeless functions.
 
-```
+Our basic function receives events from Falco thanks to Falcosidekick, check if the triggered rule is Terminal Shell in container (See [rule](https://github.com/falcosecurity/falco/blob/0d7068b048772b1e2d3ca5c86c30b3040eac57df/rules/falco_rules.yaml#L2063)), extract the namespace and pod name from fields of events and delete the according pod:
+
+```bash
 from kubernetes import client,config
 
 config.load_incluster_config()
@@ -22,13 +21,13 @@ def delete_pod(event, context):
             client.CoreV1Api().delete_namespaced_pod(name=pod, namespace=namespace, body=client.V1DeleteOptions())
 ```
 
-Basically, the process is:
+Outline of the process:
 
 ![diagram](assets/diagram.png)
 
 Before deploying our function, we need to create a ServiceAccount for it, as it will need the right to delete a pod in any namespace:
 
-```
+```bash
 cat <<EOF | kubectl apply -n kubeless -f -
 apiVersion: v1
 kind: ServiceAccount
@@ -61,7 +60,7 @@ EOF
 
 And this is the output we get after we create it:
 
-```
+```bash
 namespace: kubelessetetion.k8s.io
 serviceaccount/falco-pod-delete created
 clusterrole.rbac.authorization.k8s.io/falco-pod-delete-cluster-role created
@@ -70,7 +69,7 @@ clusterrolebinding.rbac.authorization.k8s.io/falco-pod-delete-cluster-role-bindi
 
 Only remains the installation of our function itself:
 
-```
+```bash
 cat <<EOF | kubectl apply -n kubeless -f -
 apiVersion: kubeless.io/v1beta1
 kind: Function
@@ -114,7 +113,7 @@ EOF
 
 This is what we get after a suscessfull installation:
 
-```
+```bash
 function.kubeless.io/delete-pod created
 ```
 
@@ -122,7 +121,7 @@ Here we are, after a few moments, we have a Kubeless function running in namespa
 
 `kubectl get pods -n kubeless`{{execute}}
 
-```
+```bash
 NAME                                          READY   STATUS    RESTARTS   AGE
 kubeless-controller-manager-99459cb67-tb99d   3/3     Running   3          3d14h
 delete-pod-d6f98f6dd-cw228                    1/1     Running   0          2m52s
@@ -132,7 +131,7 @@ And executing `kubectl get svc -n kubeless`{{execute}}:
 
 Will return:
 
-```
+```bash
 NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
 delete-pod   ClusterIP   10.43.211.201   <none>        8080/TCP         4m38s
 ```
