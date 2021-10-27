@@ -34,7 +34,7 @@ Then, execute any command in the `example2` container, `ls` for example:
 
 `docker exec -it example2 ls`{{execute}}
 
-If you look at the falco events log file with `tail /var/log/falco_events.log`{{execute}} you will be able to read:
+If you look at the falco events log file with `tail /var/log/falco_events.log | grep "Unauthorized process (ls)"`{{execute}} you will be able to read:
 
 ```log
 08:48:54.096496481: Warning Unauthorized process (ls) running in (e4b2097bbf15)

@@ -14,7 +14,7 @@ You can play around a little if you want, then execute `exit`{{execute}} to leav
 
 ## Log event
 
-If you tail the log file with `tail /var/log/falco_events.log`{{execute}} you should be able to read:
+If you tail the log file with `tail /var/log/falco_events.log | grep "A shell was spawned"`{{execute}} you should be able to read:
 
 ```log
 08:46:43.798834868: Notice A shell was spawned in a container with an attached terminal (user=root user_loginuid=-1 example1 (id=07b87bc077d1) shell=bash parent=runc cmdline=bash terminal=34816 container_id=07b87bc077d1 image=nginx)
